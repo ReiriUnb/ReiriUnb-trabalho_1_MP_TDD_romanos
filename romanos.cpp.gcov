@@ -1,0 +1,72 @@
+        -:    0:Source:romanos.cpp
+        -:    1:#include "romanos.hpp"
+        -:    2:#include <string>
+        -:    3:
+        -:    4:// Esta função para converte caractere romano em um nun decimal
+      520:    5:int algarismo_romano_unico(char algarismo) 
+        -:    6:{
+        -:    7:  // Os  if para verificar qual é o caractere e retornamos o valor certo
+      520:    8:  if (algarismo == 'I')
+      120:    9:    return 1;
+      400:   10:  if (algarismo == 'V')
+       40:   11:    return 5;
+      360:   12:  if (algarismo == 'X')
+       90:   13:    return 10;
+      270:   14:  if (algarismo == 'L')
+       30:   15:    return 50;
+      240:   16:  if (algarismo == 'C')
+       90:   17:    return 100;
+      150:   18:  if (algarismo == 'D')
+       30:   19:    return 500;
+      120:   20:  if (algarismo == 'M')
+      100:   21:    return 1000;
+        -:   22:  // Se o caractere não for um algarismo romano valido, retornamos -1
+       20:   23:  return -1;
+        -:   24:}
+        -:   25:
+        -:   26:// Esta função verifica se um algarismo romano menor está aparecendo corretamente antes de um algarismo maior
+      160:   27:bool eh_subtracao_valida(char menor, char maior) {
+      160:   28:    if (menor == 'I') {
+       60:   29:        return maior == 'V' || maior == 'X';
+      100:   30:    } else if (menor == 'X') {
+       60:   31:        return maior == 'L' || maior == 'C';
+       40:   32:    } else if (menor == 'C') {
+      40*:   33:        return maior == 'D' || maior == 'M';
+        -:   34:    }
+    #####:   35:    return false;
+        -:   36:}
+        -:   37:
+        -:   38:// Esta função converte uma string de caracteres romanos em um nun decimal
+      230:   39:int romanos_para_decimal(const std::string& num_romano) {
+      230:   40:    int total = 0;
+      230:   41:    int valor_atual = 0;
+      230:   42:    int valor_anterior = 0;
+        -:   43:
+      690:   44:    for (int i = num_romano.length() - 1; i >= 0; --i) {
+      520:   45:        valor_atual = algarismo_romano_unico(num_romano[i]);
+        -:   46:
+        -:   47:        // Se algarismo_romano_unico retornar -1, retornamos -1
+      520:   48:        if (valor_atual == -1) {
+       20:   49:            return -1;
+        -:   50:        }
+        -:   51:
+        -:   52:        // Se o valor atual for maior ou igual ao valor anterior, nos o add ao total
+      500:   53:        if (valor_atual >= valor_anterior) {
+      340:   54:            total += valor_atual;
+        -:   55:        } else {
+        -:   56:            // Se não for uma subtração valida, retornamos -1
+      160:   57:            if (!eh_subtracao_valida(num_romano[i], num_romano[i+1])) {
+       40:   58:                return -1;
+        -:   59:            }
+        -:   60:            // Se o valor atual for menor que o valor anterior, nós o subtraimos do total
+      120:   61:            total -= valor_atual;
+        -:   62:        }
+        -:   63:
+        -:   64:        // Atualizamos o valor anterior para a proxima iteração
+      460:   65:        valor_anterior = valor_atual;
+        -:   66:    }
+        -:   67:
+        -:   68:    // Retornamos a soma total
+      170:   69:    return total;
+        -:   70:}
+        -:   71:// wesley
